@@ -22,9 +22,4 @@ export class LoginPage {
     await this.page.getByLabel('Senha').fill(senha)
     await this.page.getByRole('button', { name: 'Entrar' }).click()
   }
-
-  async isLoggerUser() {
-    const logoutButton = this.page.getByRole('button', { name: 'Sair' })
-    await expect(logoutButton).toBeVisible()
-  }
 }
