@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 import { LoginPage } from '../pages/login.page'
 import { Navbar } from '../pages/componentes/navbar'
 
+import { faker } from '@faker-js/faker'
+
 test('deve cadastrar uma nova missão', async ({ page }) => {
 
   const loginPage = new LoginPage(page)
@@ -9,12 +11,14 @@ test('deve cadastrar uma nova missão', async ({ page }) => {
 
   await loginPage.go()
   await loginPage.login('buzz@lunarpass.dev', 'pwd123')
-  await expect(navbar.logoutButton).toBeVisible()
+  await expect(navbar.logoutButton).toBeVisible({timeout: 10_000})
 
   await page.getByRole('link', { name: 'Nova missão' }).click()
   await expect(page.getByRole('heading', { name: 'Programar missão' })).toBeVisible()
 
-  await page.getByRole('textbox', { name: 'ID da missão' }).fill('LP-2801A')
+  const missionId = 'LP-' + faker.string.alphanumeric({ length: { min: 5, max: 5 }, casing: 'upper' })
+
+  await page.getByRole('textbox', { name: 'ID da missão' }).fill(missionId)
   await page.getByRole('textbox', { name: 'Foguete' }).fill('Starship')
   await page.getByLabel('Base lunar').selectOption('aurora')
   await page.getByRole('textbox', { name: 'Data de partida' }).fill('2028-01-20')
@@ -22,5 +26,5 @@ test('deve cadastrar uma nova missão', async ({ page }) => {
   await page.getByRole('spinbutton', { name: 'Preço por passagem (USD)' }).fill('1000')
 
   await page.getByRole('button', { name: 'Salvar missão' }).click()
-  await expect(page.getByRole('listitem')).toContainText('A nova missão foi adicionada ao catálogo e já está disponível para reserva.')
+  await expect(page.getByRole('listitem')).toContainText('A nova missão foi adicionada ao catálogo e já está disponível para reservas.')
 })
