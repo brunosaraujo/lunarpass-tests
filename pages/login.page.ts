@@ -18,8 +18,8 @@ export class LoginPage {
   }
 
   async login(email: string, senha: string) {
-    await this.page.getByLabel('E-mail').fill(email)
-    await this.page.getByLabel('Senha').fill(senha)
+    await this.page.getByPlaceholder('Informe seu email').fill(email)
+    await this.page.getByPlaceholder('Sua senha secreta').fill(senha)
     await this.page.getByRole('button', { name: 'Entrar' }).click()
   }
 }
