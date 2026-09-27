@@ -1,13 +1,16 @@
 import { test, expect } from '@playwright/test'
+
 import { LoginPage } from '../pages/login.page'
+import { DashPage } from '../pages/dash.page'
+import { RegisterPage } from '../pages/register.page'
+
 import { Navbar } from '../pages/componentes/navbar'
+import { Toast } from '../pages/componentes/toast'
 
 import { faker } from '@faker-js/faker'
-
 import { Mission } from '../support/mission'
 
 test('deve cadastrar uma nova missão', async ({ page }) => {
-
   const mission: Mission = {
     id: 'LP-' + faker.string.alphanumeric({ length: { min: 5, max: 5 }, casing: 'upper' }),
     rocket: 'Starship',
@@ -19,22 +22,19 @@ test('deve cadastrar uma nova missão', async ({ page }) => {
   }
 
   const loginPage = new LoginPage(page)
+  const dashPage = new DashPage(page)
+  const registerPage = new RegisterPage(page)
   const navbar = new Navbar(page)
+  const toast = new Toast(page)
 
   await loginPage.go()
   await loginPage.login('buzz@lunarpass.dev', 'pwd123')
   await expect(navbar.logoutButton).toBeVisible({timeout: 10_000})
 
-  await page.getByRole('link', { name: 'Nova missão' }).click()
-  await expect(page.getByRole('heading', { name: 'Programar missão' })).toBeVisible()
+  await dashPage.addButton.click()
+  await expect(registerPage.title).toBeVisible()
 
-  await page.getByRole('textbox', { name: 'ID da missão' }).fill(mission.id)
-  await page.getByRole('textbox', { name: 'Foguete' }).fill(mission.rocket)
-  await page.getByLabel('Base lunar').selectOption(mission.lunarBase)
-  await page.getByRole('textbox', { name: 'Data de partida' }).fill(mission.departureDate)
-  await expect(page.getByTestId('mission-form-return-date')).toContainText(mission.returnDate)
-  await page.getByRole('spinbutton', { name: 'Preço por passagem (USD)' }).fill(mission.price)
+  await registerPage.submit(mission)
 
-  await page.getByRole('button', { name: 'Salvar missão' }).click()
-  await expect(page.getByRole('listitem')).toContainText('A nova missão foi adicionada ao catálogo e já está disponível para reservas.')
+  await expect(toast.message).toContainText('A nova missão foi adicionada ao catálogo e já está disponível para reservas.')
 })
