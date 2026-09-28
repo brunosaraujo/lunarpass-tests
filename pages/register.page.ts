@@ -5,10 +5,12 @@ import { Mission } from "../support/mission"
 export class RegisterPage {
   readonly page: Page
   readonly title: Locator
+  readonly alert: Locator
 
   constructor(page: Page) {
     this.page = page
     this.title = page.getByRole('heading', { name: 'Programar missão' })
+    this.alert = page.getByRole('alert')
   }
 
   async submit(mission: Mission) {

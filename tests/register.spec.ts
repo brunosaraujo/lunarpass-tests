@@ -38,3 +38,31 @@ test('deve cadastrar uma nova missão', async ({ page }) => {
 
   await expect(toast.message).toContainText('A nova missão foi adicionada ao catálogo e já está disponível para reservas.')
 })
+
+test('não deve cadastrar com o código de missão incorreto', async ({ page }) => {
+  const mission: Mission = {
+    id: faker.string.alphanumeric({ length: { min: 5, max: 5 }, casing: 'upper' }),
+    rocket: 'Starship',
+    lunarBase: 'aurora',
+    departureDate: '2028-01-20',
+    returnDate: '27 de jan. de 2028',
+    price: '1000'
+
+  }
+
+  const loginPage = new LoginPage(page)
+  const dashPage = new DashPage(page)
+  const registerPage = new RegisterPage(page)
+  const navbar = new Navbar(page)
+
+  await loginPage.go()
+  await loginPage.login('buzz@lunarpass.dev', 'pwd123')
+  await expect(navbar.logoutButton).toBeVisible({timeout: 10_000})
+
+  await dashPage.addButton.click()
+  await expect(registerPage.title).toBeVisible()
+
+  await registerPage.submit(mission)
+
+  await expect(registerPage.alert).toHaveText('Use o formato LP-0000')
+})
