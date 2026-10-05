@@ -8,7 +8,7 @@ import { Navbar } from '../pages/componentes/navbar'
 import { Toast } from '../pages/componentes/toast'
 
 import { faker } from '@faker-js/faker'
-import { Mission } from '../support/mission'
+import { Mission } from '../support/types'
 
 import { insertMission, deleteMission, deleteReservation, deleteTicket } from '../support/db'
 
@@ -36,10 +36,10 @@ test('deve cadastrar uma nova missão', async ({ page }) => {
   const mission: Mission = {
     id: 'LP-' + faker.string.alphanumeric({ length: { min: 5, max: 5 }, casing: 'upper' }),
     rocket: 'Starship',
-    lunarBase: 'aurora',
+    baseId: 'aurora',
     departureDate: '2028-01-20',
-    returnDate: '27 de jan. de 2028',
-    price: '1000'
+    returnDate: '2028-01-27',
+    price: 1000
   }
 
   await dashPage.addButton.click()
@@ -53,10 +53,10 @@ test('não deve cadastrar com o código de missão incorreto', async ({ page }) 
   const mission: Mission = {
     id: faker.string.alphanumeric({ length: { min: 5, max: 5 }, casing: 'upper' }),
     rocket: 'Starship',
-    lunarBase: 'aurora',
+    baseId: 'aurora',
     departureDate: '2028-01-20',
-    returnDate: '27 de jan. de 2028',
-    price: '1000'
+    returnDate: '2028-01-27',
+    price: 1000
   }
 
   await dashPage.addButton.click()
@@ -66,20 +66,20 @@ test('não deve cadastrar com o código de missão incorreto', async ({ page }) 
   await expect(registerPage.alert).toHaveText('Use o formato LP-0000')
 })
 
-test.only('não deve cadastrar com o código duplicado', async ({ page }) => {
+test('não deve cadastrar com o código duplicado', async ({ page }) => {
   const mission: Mission = {
     id: 'LP-0127A',
     rocket: 'Starship',
-    lunarBase: 'aurora',
+    baseId: 'aurora',
     departureDate: '2028-01-20',
-    returnDate: '27 de jan. de 2028',
-    price: '1000'
+    returnDate: '2028-01-27',
+    price: 1000.00
   }
 
   await deleteReservation(mission.id)
   await deleteTicket(mission.id)
   await deleteMission(mission.id)
-  await insertMission(mission.id)
+  await insertMission(mission)
 
   await dashPage.addButton.click()
   await expect(registerPage.title).toBeVisible()
