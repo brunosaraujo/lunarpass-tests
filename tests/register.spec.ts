@@ -10,6 +10,8 @@ import { Toast } from '../pages/componentes/toast'
 import { faker } from '@faker-js/faker'
 import { Mission } from '../support/mission'
 
+import { insertMission, deleteMission, deleteReservation, deleteTicket } from '../support/db'
+
 let loginPage: LoginPage
 let dashPage: DashPage
 let registerPage: RegisterPage
@@ -24,7 +26,7 @@ test.beforeEach(async ({ page }) => {
   navbar = new Navbar(page)
   toast = new Toast(page)
 
-    await loginPage.go()
+  await loginPage.go()
   await loginPage.login('buzz@lunarpass.dev', 'pwd123')
   await expect(navbar.logoutButton).toBeVisible({ timeout: 10_000 })
 
@@ -42,7 +44,6 @@ test('deve cadastrar uma nova missão', async ({ page }) => {
 
   await dashPage.addButton.click()
   await expect(registerPage.title).toBeVisible()
-
   await registerPage.submit(mission)
 
   await expect(toast.message).toContainText('A nova missão foi adicionada ao catálogo e já está disponível para reservas.')
@@ -60,13 +61,12 @@ test('não deve cadastrar com o código de missão incorreto', async ({ page }) 
 
   await dashPage.addButton.click()
   await expect(registerPage.title).toBeVisible()
-
   await registerPage.submit(mission)
 
   await expect(registerPage.alert).toHaveText('Use o formato LP-0000')
 })
 
-test('não deve cadastrar com o código duplicado', async ({ page }) => {
+test.only('não deve cadastrar com o código duplicado', async ({ page }) => {
   const mission: Mission = {
     id: 'LP-0127A',
     rocket: 'Starship',
@@ -76,9 +76,13 @@ test('não deve cadastrar com o código duplicado', async ({ page }) => {
     price: '1000'
   }
 
+  await deleteReservation(mission.id)
+  await deleteTicket(mission.id)
+  await deleteMission(mission.id)
+  await insertMission(mission.id)
+
   await dashPage.addButton.click()
   await expect(registerPage.title).toBeVisible()
-
   await registerPage.submit(mission)
 
   await expect(registerPage.alert).toHaveText('Já existe uma missão com este ID.')
