@@ -34,13 +34,17 @@ test.beforeEach(async ({ page }) => {
 
 test('deve cadastrar uma nova missão', async ({ page }) => {
   const mission: Mission = {
-    id: 'LP-' + faker.string.alphanumeric({ length: { min: 5, max: 5 }, casing: 'upper' }),
+    id: 'LP-0128A',
     rocket: 'Starship',
     baseId: 'aurora',
     departureDate: '2028-01-20',
     returnDate: '2028-01-27',
     price: 1000
   }
+
+  await deleteReservation(mission.id)
+  await deleteTicket(mission.id)
+  await deleteMission(mission.id)
 
   await dashPage.addButton.click()
   await expect(registerPage.title).toBeVisible()
@@ -70,10 +74,10 @@ test('não deve cadastrar com o código duplicado', async ({ page }) => {
   const mission: Mission = {
     id: 'LP-0127A',
     rocket: 'Starship',
-    baseId: 'aurora',
-    departureDate: '2028-01-20',
-    returnDate: '2028-01-27',
-    price: 1000.00
+    baseId: 'orion',
+    departureDate: '2030-01-20',
+    returnDate: '2030-01-27',
+    price: 5000.00
   }
 
   await deleteReservation(mission.id)
