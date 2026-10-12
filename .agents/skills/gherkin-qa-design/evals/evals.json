@@ -37,6 +37,12 @@
         "Não inventa regra para regiões Norte, Nordeste e Centro-Oeste para clientes não Premium",
         "Registra variantes descartadas com motivo"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "User a skill grekin-qa-design para converter o documento Documentação Funcional — Storefront Lunar Pass.md para Gherkin, criando um novo arequivo com o nome storefront.md",
+      "expected_output": "",
+      "assertions": []
     }
   ]
 }
