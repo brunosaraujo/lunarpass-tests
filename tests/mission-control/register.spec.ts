@@ -14,6 +14,7 @@ test.beforeEach(async ({ app }) => {
 })
 
 test('deve cadastrar uma nova missão', async ({ app }) => {
+  
   const mission: Mission = {
     id: 'LP-0128A',
     rocket: 'Starship',
