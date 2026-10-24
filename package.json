@@ -12,6 +12,9 @@
     "pg": "^8.23.1"
   },
   "scripts": {
+    "test": "playwright test",
+    "test:mission": "playwright test --project=mission-control",
+    "test:store": "playwright test --project=storefront",
     "go": "claude",
     "router": "9router"
   },

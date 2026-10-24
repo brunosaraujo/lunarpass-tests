@@ -3,6 +3,7 @@ export function formatDate(dateStr: string): string {
     'jan.', 'fev.', 'mar.', 'abr.', 'mai.', 'jun.',
     'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.'
   ]
+  
   const [year, month, day] = dateStr.split('-').map(Number)
 
   if (!year || !month || !day) {
